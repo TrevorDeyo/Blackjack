@@ -1,7 +1,7 @@
 import random
 import time
 
-sleep = 0
+sleep = 0.5
 
 print("===== Blackjack || Twenty-One =====\n")
 time.sleep(sleep)
@@ -9,9 +9,10 @@ print("The standard 52-card pack is used\n")
 time.sleep(sleep)
 print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
 time.sleep(sleep)
-print("Card Values/scoring: It is up to each individual player if an ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
+print("Card Values/scoring: It is up to each individual player if an ace is worth 1 or 11. Face cards are 10 and any other card is its number value.")
 time.sleep(sleep)
-
+print()
+print("*" * 30)
 
 deck = ["2 of Clubs", "2 of Diamonds", "2 of Hearts", "2 of Spades",
         "3 of Clubs", "3 of Diamonds", "3 of Hearts", "3 of Spades",
@@ -44,9 +45,50 @@ def hand_value(hand):
 
 random.shuffle(deck)
 
-hand = [deck.pop()]
+players_hand = [deck.pop()]
+players_hand += [deck.pop()]
 
-print(hand, hand_value(hand))
+dealers_hand = [deck.pop()]
+
+busted = False
+
+
+while not busted:
+
+    print(f"Dealers Hand: {dealers_hand} Value: {hand_value(dealers_hand)}")
+    print("-" * 30)
+    time.sleep(sleep)
+    print(f"Your Hand: {players_hand} Value: {hand_value(players_hand)}")
+    print("=" * 30)
+    time.sleep(sleep)
+    print("Would you like to hit or stay?")
+    print("1. Hit")
+    print("2. Stay")
+
+    user_input = ''
+    while user_input not in ("1", "2"):
+        user_input = input("Your Choice: ")
+        if user_input not in ("1", "2"):
+            print("Incorrect Input pick 1 or 2")
+
+    if user_input == "1":
+        players_hand += [deck.pop()]
+
+    print("\n\n")
+
+    if hand_value(players_hand) > 21:
+        print("YOU BUSTED!")
+        for x in range(5):
+            print(f"Game Restarting{x * '.'}")
+            time.sleep(0.75)
+        print()
+        busted = True
+
+
+
+"""
+print(players_hand, hand_value(players_hand))
 
 my_hand = ["10C", "JD", "AS"]
 print("Hand value:",my_hand ,hand_value(my_hand))  # Should be 21
+"""
