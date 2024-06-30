@@ -12,7 +12,7 @@ time.sleep(sleep)
 print("Card Values/scoring: It is up to each individual player if an ace is worth 1 or 11. Face cards are 10 and any other card is its number value.")
 time.sleep(sleep)
 print()
-print("*" * 30)
+print("*" * 50)
 
 while True:
 
@@ -51,11 +51,12 @@ while True:
     players_hand += [deck.pop()]
 
     dealers_hand = [deck.pop()]
+    dealers_hand += [deck.pop()]
 
     busted = False
     while not busted:
 
-        print(f"Dealers Hand: {dealers_hand} Value: {hand_value(dealers_hand)}")
+        print(f"Dealers Hand: {dealers_hand[0]} Value: {hand_value(dealers_hand[0])}")
         print("-" * 50)
         time.sleep(sleep)
         print(f"Your Hand: {players_hand} Value: {hand_value(players_hand)}")
@@ -66,9 +67,10 @@ while True:
         print("2. Stay")
 
         user_input = ''
-        user_input = user_input.lower()
+
         while user_input not in ("1", "2", "hit", "stay"):
             user_input = input("Your Choice: ")
+            user_input = user_input.lower()
             if user_input not in ("1", "2"):
                 print("Incorrect choice pick 1 or 2")
 
