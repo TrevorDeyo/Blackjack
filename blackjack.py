@@ -1,16 +1,14 @@
 import random
 import time
 
-sleep = 1
-
 print("===== Blackjack || Twenty-One =====\n")
-time.sleep(sleep)
+time.sleep(1)
 print("The standard 52-card pack is used\n")
-time.sleep(sleep)
+time.sleep(1)
 print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
-time.sleep(sleep)
-print("Card Values/scoring: It is up to each individual player if an ace is worth 1 or 11. Face cards are 10 and any other card is its number value.")
-time.sleep(sleep)
+time.sleep(1)
+print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.")
+time.sleep(1)
 print()
 print("*" * 50)
 
@@ -56,12 +54,12 @@ while True:
     busted = False
     while not busted:
 
-        print(f"Dealers Hand: {dealers_hand[0]} Value: {hand_value(dealers_hand[0])}")
+        print(f"Dealers Hand: {dealers_hand[0]} | Hand Value: {hand_value(dealers_hand[0])}")
         print("-" * 50)
-        time.sleep(sleep)
-        print(f"Your Hand: {players_hand} Value: {hand_value(players_hand)}")
+        time.sleep(1)
+        print(f"Your Hand: {players_hand} | Hand Value: {hand_value(players_hand)}")
         print("=" * 50)
-        time.sleep(sleep)
+        time.sleep(1)
         print("Would you like to hit or stay?")
         print("1. Hit")
         print("2. Stay")
@@ -80,7 +78,7 @@ while True:
         if hand_value(players_hand) > 21:
             print("\n\n")
             print("YOU BUSTED!")
-            time.sleep(5)
+            time.sleep(3)
             busted = True
 
 
