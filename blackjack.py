@@ -72,7 +72,7 @@ while True:
             user_input = input("Your Choice: ")
             user_input = user_input.lower()
             if user_input not in ("1", "2"):
-                print("Incorrect choice pick 1 or 2")
+                print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
 
         if user_input in ("1", "hit"):
             players_hand += [deck.pop()]
