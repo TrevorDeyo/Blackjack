@@ -7,9 +7,8 @@ print("The standard 52-card pack is used\n")
 time.sleep(1)
 print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
 time.sleep(1)
-print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.")
+print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
 time.sleep(1)
-print()
 print("*" * 50)
 
 while True:
@@ -28,6 +27,8 @@ while True:
             "King of Clubs", "King of Diamonds", "King of Hearts", "King of Spades",
             "Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades",]
 
+
+    # function that calculates the value of the hand
     def hand_value(hand):
         hand_value = 0
 
@@ -42,14 +43,16 @@ while True:
 
         return hand_value
             
-
+    # shuffle deck
     random.shuffle(deck)
 
+    # Deal Cards
     players_hand = [deck.pop()]
     players_hand += [deck.pop()]
 
     dealers_hand = [deck.pop()]
     dealers_hand += [deck.pop()]
+
 
     busted = False
     while not busted:
@@ -69,7 +72,7 @@ while True:
         while user_input not in ("1", "2", "hit", "stay"):
             user_input = input("Your Choice: ")
             user_input = user_input.lower()
-            if user_input not in ("1", "2"):
+            if user_input not in ("1", "2", "hit", "stay"):
                 print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
 
         if user_input in ("1", "hit"):
@@ -77,7 +80,7 @@ while True:
 
         if hand_value(players_hand) > 21:
             print("\n\n")
-            print("YOU BUSTED!")
+            print("YOU BUSTED!\n\n")
             time.sleep(3)
             busted = True
 
