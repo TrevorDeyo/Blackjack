@@ -30,8 +30,7 @@ sleep_print("Object of the Game is to beat the dealer by getting a count as clos
 
 sleep_print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
 
-sleep_print("*" * 50)
-
+sleep_print("===== GAME STARTING =====\n")
 while True:
 
     # Game Setup Begins
@@ -70,7 +69,7 @@ while True:
     
     while True:
 
-        sleep_print(f"Dealers Hand: {dealers_hand[0]} |?| and a turned over card |?| | Hand Value: {hand_value(dealers_hand[0])} + |?|")
+        sleep_print(f"Dealers Hand: {dealers_hand[0]} and a turned over card |?| | Hand Value: {hand_value(dealers_hand[0])} + |?|")
         sleep_print("-" * 50)
         sleep_print(f"Your Hand: {players_hand} | Hand Value: {players_hand_value}")
         sleep_print("=" * 50)
@@ -109,7 +108,7 @@ while True:
 
             sleep_print("Dealer Stays")
             if dealers_hand_value >= players_hand_value:
-                sleep_print(f"Dealer's hand {dealers_hand} Value: {dealers_hand_value} is >= players hand {players_hand} | Value: {players_hand_value} and therefor wins")
-                sleep_print("Better Luck Next Time!")
+                sleep_print(f"Dealer's hand {dealers_hand} Value: {dealers_hand_value} is >= players hand {players_hand} | Value: {players_hand_value}")
+                sleep_print("DEALER WINS\n")
             else:
                 sleep_print(f"Player's Hand {players_hand} | Value: {players_hand_value} is greater than the Dealers Hand: {dealers_hand} | Value: {dealers_hand_value} and therefor wins")
