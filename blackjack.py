@@ -53,14 +53,15 @@ while True:
     dealers_hand = [deck.pop()]
     dealers_hand += [deck.pop()]
 
+    players_hand_value = hand_value(players_hand)
 
-    busted = False
-    while not busted:
+    # Game Loop
+    while True:
 
         print(f"Dealers Hand: {dealers_hand[0]} | Hand Value: {hand_value(dealers_hand[0])}")
         print("-" * 50)
         time.sleep(1)
-        print(f"Your Hand: {players_hand} | Hand Value: {hand_value(players_hand)}")
+        print(f"Your Hand: {players_hand} | Hand Value: {players_hand_value}")
         print("=" * 50)
         time.sleep(1)
         print("Would you like to hit or stay?")
@@ -77,18 +78,22 @@ while True:
 
         if user_input in ("1", "hit"):
             players_hand += [deck.pop()]
+            players_hand_value = hand_value(players_hand)
+            print(f"Player hits! new hand value: {players_hand_value}")
 
-        if hand_value(players_hand) > 21:
+        if user_input in ("2", "stay"):
+            print("Revealing Dealers hand")
+            time.sleep(1)
+            print(f"Dealers Hand: {dealers_hand} | Hand Value: {hand_value(dealers_hand)}")
+            time.sleep(1)
+            if hand_value(dealers_hand) >= 17:
+                print("Dealer Stays")
+                time.sleep(1)
+                if hand_value(dealers_hand) >= players_hand_value:
+                    print(f"Dealer's hand worth: {hand_value(dealers_hand)} is >= players hand {players_hand_value} and therefor wins :(")
+
+        if players_hand_value > 21:
             print("\n\n")
             print("YOU BUSTED!\n\n")
-            time.sleep(3)
-            busted = True
-
-
-
-"""
-print(players_hand, hand_value(players_hand))
-
-my_hand = ["10C", "JD", "AS"]
-print("Hand value:",my_hand ,hand_value(my_hand))  # Should be 21
-"""
+            print("Game Restarting")
+            time.sleep(1)
