@@ -66,49 +66,60 @@ while True:
     # Game Setup Ends
 
     # Game Starts / Game Loop
-    
-    while True:
+    game_running = True
+    while game_running:
 
-        sleep_print(f"Dealers Hand: {dealers_hand[0]} and a turned over card |?| | Hand Value: {hand_value(dealers_hand[0])} + |?|")
+        sleep_print(f"Dealers Hand: {dealers_hand[0]} and a turned over card |?|, Hand Value: {hand_value(dealers_hand[0])} + |?|")
         sleep_print("-" * 50)
-        sleep_print(f"Your Hand: {players_hand} | Hand Value: {players_hand_value}")
+        sleep_print(f"Your Hand: {players_hand}, Hand Value: {players_hand_value}")
         sleep_print("=" * 50)
         sleep_print("Would you like to hit or stay?")
         sleep_print("1. Hit")
-        sleep_print("2. Stay")
+        sleep_print("2. Stay\n")
 
         user_input = ''
 
         while user_input not in ("1", "2", "hit", "stay"):
             user_input = input("Your Choice: ")
+            print()
             user_input = user_input.lower()
             if user_input not in ("1", "2", "hit", "stay"):
                 sleep_print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
 
         if user_input in ("1", "hit"):
+            sleep_print(f"Player hits!\n")
+
             players_hand += [deck.pop()]
             players_hand_value = hand_value(players_hand)
-            sleep_print(f"Player hits! new hand {players_hand} | value: {players_hand_value}")
+            
+            sleep_print(f"Dealer draws a {players_hand[-1]}")
+            sleep_print(f"Dealers hand is {players_hand} , Hand Value: {players_hand_value}")
 
             if players_hand_value > 21:
-                sleep_print("\n\n")
                 sleep_print("YOU BUSTED!\n\n")
-                sleep_print("Game Restarting")
-                break
+                game_running = False
 
         if user_input in ("2", "stay"):
-            sleep_print("Revealing Dealers hand")    
-            sleep_print(f"Dealers Hand: {dealers_hand} | Hand Value: {dealers_hand_value}")
+            sleep_print("Player Stays\n")
+            sleep_print("Revealing Dealers hand\n")    
+            sleep_print(f"Dealers Hand: {dealers_hand} , Hand Value: {dealers_hand_value}\n")
             
             while dealers_hand_value < 17:
                 dealers_hand += [deck.pop()]
-                sleep_print("Dealer hits")    
-                sleep_print(f"Dealer draws a {dealers_hand[3]}")
-                sleep_print(f"Dealers hand is {dealers_hand} | Hand Value: {dealers_hand_value}")
+                dealers_hand_value = hand_value(dealers_hand)
+                sleep_print("Dealer hits\n")    
+                sleep_print(f"Dealer draws a {dealers_hand[-1]}")
+                sleep_print(f"Dealers hand is {dealers_hand} , Hand Value: {dealers_hand_value}")
+                if dealers_hand_value > 21:
+                    sleep_print("Dealer Busted!")
+                    game_running = False
 
             sleep_print("Dealer Stays")
             if dealers_hand_value >= players_hand_value:
-                sleep_print(f"Dealer's hand {dealers_hand} Value: {dealers_hand_value} is >= players hand {players_hand} | Value: {players_hand_value}")
-                sleep_print("DEALER WINS\n")
+                sleep_print(f"Dealer's hand {dealers_hand}, Value: {dealers_hand_value} is >= players hand {players_hand}, Value: {players_hand_value}\n")
+                sleep_print("----- DEALER WINS -----\n")
             else:
-                sleep_print(f"Player's Hand {players_hand} | Value: {players_hand_value} is greater than the Dealers Hand: {dealers_hand} | Value: {dealers_hand_value} and therefor wins")
+                sleep_print(f"Player's Hand {players_hand}, Value: {players_hand_value} is greater than the Dealers Hand: {dealers_hand}, Value: {dealers_hand_value} and therefor wins")
+                sleep_print("***** YOU WIN!!! *****")
+
+    sleep_print("Game Restarting\n\n")
