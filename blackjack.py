@@ -1,17 +1,40 @@
 import random
 import time
 
-print("===== Blackjack || Twenty-One =====\n")
-time.sleep(1)
-print("The standard 52-card pack is used\n")
-time.sleep(1)
-print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
-time.sleep(1)
-print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
-time.sleep(1)
-print("*" * 50)
+# Function so I dont have to type so much
+def sleep_print(text):
+    print(text)
+    time.sleep(.5)
+
+# function that calculates the value of the hand
+
+def hand_value(hand):
+    hand_value = 0
+
+    for card in hand:
+        if card[0].isdigit() and int(card[0]) > 1:
+            hand_value += int(card[0])
+        elif card[0] in ("1", "J", "Q", "K"):
+            hand_value += 10
+        elif card[0] == "A":
+            # Handle Ace: choose 1 or 11 based on the total hand value
+            hand_value += 11 if hand_value + 11 <= 21 else 1
+
+    return hand_value
+
+sleep_print("===== Blackjack || Twenty-One =====\n")
+
+sleep_print("The standard 52-card pack is used\n")
+
+sleep_print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
+
+sleep_print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
+
+sleep_print("*" * 50)
 
 while True:
+
+    # Game Setup Begins
 
     deck = ["2 of Clubs", "2 of Diamonds", "2 of Hearts", "2 of Spades",
             "3 of Clubs", "3 of Diamonds", "3 of Hearts", "3 of Spades",
@@ -28,21 +51,6 @@ while True:
             "Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades",]
 
 
-    # function that calculates the value of the hand
-    def hand_value(hand):
-        hand_value = 0
-
-        for card in hand:
-            if card[0].isdigit() and int(card[0]) > 1:
-                hand_value += int(card[0])
-            elif card[0] in ("1", "J", "Q", "K"):
-                hand_value += 10
-            elif card[0] == "A":
-                # Handle Ace: choose 1 or 11 based on the total hand value
-                hand_value += 11 if hand_value + 11 <= 21 else 1
-
-        return hand_value
-            
     # shuffle deck
     random.shuffle(deck)
 
@@ -54,19 +62,21 @@ while True:
     dealers_hand += [deck.pop()]
 
     players_hand_value = hand_value(players_hand)
+    dealers_hand_value = hand_value(dealers_hand)
 
-    # Game Loop
+    # Game Setup Ends
+
+    # Game Starts / Game Loop
+    
     while True:
 
-        print(f"Dealers Hand: {dealers_hand[0]} | Hand Value: {hand_value(dealers_hand[0])}")
-        print("-" * 50)
-        time.sleep(1)
-        print(f"Your Hand: {players_hand} | Hand Value: {players_hand_value}")
-        print("=" * 50)
-        time.sleep(1)
-        print("Would you like to hit or stay?")
-        print("1. Hit")
-        print("2. Stay")
+        sleep_print(f"Dealers Hand: {dealers_hand[0]} |?| and a turned over card |?| | Hand Value: {hand_value(dealers_hand[0])} + |?|")
+        sleep_print("-" * 50)
+        sleep_print(f"Your Hand: {players_hand} | Hand Value: {players_hand_value}")
+        sleep_print("=" * 50)
+        sleep_print("Would you like to hit or stay?")
+        sleep_print("1. Hit")
+        sleep_print("2. Stay")
 
         user_input = ''
 
@@ -74,26 +84,32 @@ while True:
             user_input = input("Your Choice: ")
             user_input = user_input.lower()
             if user_input not in ("1", "2", "hit", "stay"):
-                print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
+                sleep_print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
 
         if user_input in ("1", "hit"):
             players_hand += [deck.pop()]
             players_hand_value = hand_value(players_hand)
-            print(f"Player hits! new hand value: {players_hand_value}")
+            sleep_print(f"Player hits! new hand {players_hand} | value: {players_hand_value}")
+
+            if players_hand_value > 21:
+                sleep_print("\n\n")
+                sleep_print("YOU BUSTED!\n\n")
+                sleep_print("Game Restarting")
+                break
 
         if user_input in ("2", "stay"):
-            print("Revealing Dealers hand")
-            time.sleep(1)
-            print(f"Dealers Hand: {dealers_hand} | Hand Value: {hand_value(dealers_hand)}")
-            time.sleep(1)
-            if hand_value(dealers_hand) >= 17:
-                print("Dealer Stays")
-                time.sleep(1)
-                if hand_value(dealers_hand) >= players_hand_value:
-                    print(f"Dealer's hand worth: {hand_value(dealers_hand)} is >= players hand {players_hand_value} and therefor wins :(")
+            sleep_print("Revealing Dealers hand")    
+            sleep_print(f"Dealers Hand: {dealers_hand} | Hand Value: {dealers_hand_value}")
+            
+            while dealers_hand_value < 17:
+                dealers_hand += [deck.pop()]
+                sleep_print("Dealer hits")    
+                sleep_print(f"Dealer draws a {dealers_hand[3]}")
+                sleep_print(f"Dealers hand is {dealers_hand} | Hand Value: {dealers_hand_value}")
 
-        if players_hand_value > 21:
-            print("\n\n")
-            print("YOU BUSTED!\n\n")
-            print("Game Restarting")
-            time.sleep(1)
+            sleep_print("Dealer Stays")
+            if dealers_hand_value >= players_hand_value:
+                sleep_print(f"Dealer's hand {dealers_hand} Value: {dealers_hand_value} is >= players hand {players_hand} | Value: {players_hand_value} and therefor wins")
+                sleep_print("Better Luck Next Time!")
+            else:
+                sleep_print(f"Player's Hand {players_hand} | Value: {players_hand_value} is greater than the Dealers Hand: {dealers_hand} | Value: {dealers_hand_value} and therefor wins")
