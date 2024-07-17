@@ -30,9 +30,8 @@ sleep_print("Object of the Game is to beat the dealer by getting a count as clos
 
 sleep_print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
 
-sleep_print("===== GAME STARTING =====\n")
 while True:
-
+    sleep_print("===== GAME STARTING =====\n")
     # Game Setup Begins
 
     deck = ["2 of Clubs", "2 of Diamonds", "2 of Hearts", "2 of Spades",
@@ -70,9 +69,9 @@ while True:
     while game_running:
 
         sleep_print(f"Dealers Hand: {dealers_hand[0]} and a turned over card |?|, Hand Value: {hand_value(dealers_hand[0])} + |?|")
-        sleep_print("-" * 50)
+        sleep_print("-" * 100)
         sleep_print(f"Your Hand: {players_hand}, Hand Value: {players_hand_value}")
-        sleep_print("=" * 50)
+        sleep_print("=" * 100 + "\n")
         sleep_print("Would you like to hit or stay?")
         sleep_print("1. Hit")
         sleep_print("2. Stay\n")
@@ -92,10 +91,10 @@ while True:
             players_hand += [deck.pop()]
             players_hand_value = hand_value(players_hand)
             
-            sleep_print(f"You draw a {players_hand[-1]}\n")
+            sleep_print(f"You draw a {players_hand[-1]}, Card Value: {hand_value(players_hand[-1])} \n")
 
             if players_hand_value > 21:
-                sleep_print(f"Making your hand over 21, Hand Value: {players_hand_value}")
+                sleep_print(f"Making your hand over 21, {players_hand}, Hand Value: {players_hand_value}")
                 sleep_print("YOU BUSTED :(\n\n")
                 game_running = False
 
@@ -108,8 +107,8 @@ while True:
                 dealers_hand += [deck.pop()]
                 dealers_hand_value = hand_value(dealers_hand)
                 sleep_print("DEALER HITS\n")    
-                sleep_print(f"Dealer draws a {dealers_hand[-1]}")
-                sleep_print(f"Dealers hand is {dealers_hand} , Hand Value: {dealers_hand_value}")
+                sleep_print(f"Dealer draws a {dealers_hand[-1]}, Card Value: {hand_value(dealers_hand[-1])}\n")
+                sleep_print(f"Dealers hand is {dealers_hand}, Hand Value: {dealers_hand_value}")
                 if dealers_hand_value > 21:
                     sleep_print("DEALER BUSTED")
                     game_running = False
@@ -121,5 +120,3 @@ while True:
             else:
                 sleep_print(f"Player's Hand {players_hand}, Value: {players_hand_value} is greater than the Dealers Hand: {dealers_hand}, Value: {dealers_hand_value} and therefor wins")
                 sleep_print("***** YOU WIN!!! *****\n")
-
-    sleep_print("Game Restarting\n\n")
