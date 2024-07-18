@@ -1,140 +1,110 @@
 import random
 import time
+from typing import List, Tuple
 
-# so I don't have to type so much
-def sleep_print(text):
+# Constants
+BLACKJACK = 21
+DEALER_STAND = 17
+
+# Card values
+VALUES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11}
+
+def sleep_print(text: str) -> None:
     print(text)
-    time.sleep(.5)
+    time.sleep(0.5)
 
-# Function that calculates the value of the hand
-def hand_value(hand):
-    value = 0
-    ace_count = 0
+def hand_value(hand: List[str]) -> int:
+    total = sum(VALUES[card.split()[0]] for card in hand)
+    aces = sum(card.startswith('A') for card in hand)
+    while total > BLACKJACK and aces:
+        total -= 10
+        aces -= 1
+    return total
 
-    for card in hand: 
-        if card[0].isdigit() and int(card[0]) > 1: # The > 1 is for excluding 10 cards
-            value += int(card[0])
-        elif card[0] in ("1", "J", "Q", "K"):
-            value += 10
-        elif card[0] == "A":
-            ace_count += 1
-            value += 11
+def get_user_choice(prompt: str, valid_choices: List[str]) -> str:
+    while True:
+        user_input = input(prompt).strip().lower()
+        if user_input in valid_choices:
+            return user_input
+        sleep_print(f"Invalid choice. Please choose from: {', '.join(valid_choices)}")
 
-    while value > 21 and ace_count:
-        value -= 10
-        ace_count -= 1
+def player_turn(deck: List[str], player_hand: List[str]) -> Tuple[List[str], bool]:
+    while True:
+        sleep_print(f"Your Hand: {player_hand}, Hand Value: {hand_value(player_hand)}")
+        sleep_print("Would you like to hit or stay?")
+        sleep_print("1. Hit")
+        sleep_print("2. Stay")
 
-    return value
+        choice = get_user_choice("Your Choice: ", ["1", "2", "hit", "stay"])
 
-# Game Explanation
-sleep_print("===== Blackjack || Twenty-One =====\n")
-sleep_print("The standard 52-card pack is used\n")
-sleep_print("Object of the Game is to beat the dealer by getting a count as close to 21 as possible, without going over 21.\n")
-sleep_print("Card Values/scoring: Ace is worth 1 or 11. Face cards are 10 and any other card is its number value.\n")
+        if choice in ("1", "hit"):
+            player_hand.append(deck.pop())
+            sleep_print(f"You draw a {player_hand[-1]}")
+            if hand_value(player_hand) > BLACKJACK:
+                sleep_print(f"Your hand: {player_hand}, Hand Value: {hand_value(player_hand)}")
+                sleep_print("YOU BUSTED :(")
+                return player_hand, True
+        else:
+            return player_hand, False
 
-while True:
-    # Game Setup Begins
-    deck = ["2 of Clubs", "2 of Diamonds", "2 of Hearts", "2 of Spades",
-            "3 of Clubs", "3 of Diamonds", "3 of Hearts", "3 of Spades",
-            "4 of Clubs", "4 of Diamonds", "4 of Hearts", "4 of Spades",
-            "5 of Clubs", "5 of Diamonds", "5 of Hearts", "5 of Spades",
-            "6 of Clubs", "6 of Diamonds", "6 of Hearts", "6 of Spades",
-            "7 of Clubs", "7 of Diamonds", "7 of Hearts", "7 of Spades",
-            "8 of Clubs", "8 of Diamonds", "8 of Hearts", "8 of Spades",
-            "9 of Clubs", "9 of Diamonds", "9 of Hearts", "9 of Spades",
-            "10 of Clubs", "10 of Diamonds", "10 of Hearts", "10 of Spades",
-            "Jack of Clubs", "Jack of Diamonds", "Jack of Hearts", "Jack of Spades",
-            "Queen of Clubs", "Queen of Diamonds", "Queen of Hearts", "Queen of Spades",
-            "King of Clubs", "King of Diamonds", "King of Hearts", "King of Spades",
-            "Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades"]
+def dealer_turn(deck: List[str], dealer_hand: List[str]) -> Tuple[List[str], bool]:
+    while hand_value(dealer_hand) < DEALER_STAND:
+        dealer_hand.append(deck.pop())
+        sleep_print(f"Dealer draws a {dealer_hand[-1]}")
+        sleep_print(f"Dealer's hand: {dealer_hand}, Hand Value: {hand_value(dealer_hand)}")
 
-    # Shuffle deck
+        if hand_value(dealer_hand) > BLACKJACK:
+            sleep_print("DEALER BUSTED")
+            return dealer_hand, True
+    return dealer_hand, False
+
+def determine_winner(player_hand: List[str], dealer_hand: List[str]) -> None:
+    player_value = hand_value(player_hand)
+    dealer_value = hand_value(dealer_hand)
+
+    sleep_print(f"Your hand: {player_hand}, Value: {player_value}")
+    sleep_print(f"Dealer's hand: {dealer_hand}, Value: {dealer_value}")
+
+    if dealer_value >= player_value:
+        sleep_print("\n----- DEALER WINS -----")
+    else:
+        sleep_print("\n***** YOU WIN!!! *****")
+
+def play_blackjack() -> None:
+    suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+    ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+    deck = [f"{rank} of {suit}" for suit in suits for rank in ranks]
     random.shuffle(deck)
 
-    # Deal Cards
-    players_hand = [deck.pop(), deck.pop()]
-    dealers_hand = [deck.pop(), deck.pop()]
+    player_hand = [deck.pop(), deck.pop()]
+    dealer_hand = [deck.pop(), deck.pop()]
 
-    players_hand_value = hand_value(players_hand)
-    dealers_hand_value = hand_value(dealers_hand)
-    # Game Setup Ends
+    sleep_print(f"Dealer's Hand: {dealer_hand[0]} and a hidden card")
 
-    game_running = True
-    while game_running:
-        # Game State Message
-        sleep_print(f"Dealers Hand: {dealers_hand[0]} and a flipped over card |?|, Hand Value: {hand_value([dealers_hand[0]])} + |?|")
-        sleep_print("-" * 100)
-        sleep_print(f"Your Hand: {players_hand}, Hand Value: {players_hand_value}")
-        sleep_print("=" * 100 + "\n")
+    player_hand, player_busted = player_turn(deck, player_hand)
 
-        # Player's Turn Begins
-        players_turn = True
-        while players_turn:
-            sleep_print("Would you like to hit or stay?")
-            sleep_print("1. Hit")
-            sleep_print("2. Stay\n")
-            
-            user_input = ""
-            while user_input not in ("1", "2", "hit", "stay"):
-                user_input = input("Your Choice: ").strip().lower()
-                if user_input not in ("1", "2", "hit", "stay"):
-                    sleep_print("INCORRECT CHOICE PICK ONE: ( 1 | 2 | hit | stay )")
+    if not player_busted:
+        sleep_print("Revealing Dealer's hand")
+        sleep_print(f"Dealer's Hand: {dealer_hand}")
+        dealer_hand, dealer_busted = dealer_turn(deck, dealer_hand)
 
-            if user_input in ("1", "hit"):
-                sleep_print(f"PLAYER HITS\n")
+        if not dealer_busted:
+            determine_winner(player_hand, dealer_hand)
 
-                players_hand.append(deck.pop())
-                players_hand_value = hand_value(players_hand)
-                
-                sleep_print(f"You draw a {players_hand[-1]}, Card Value: {hand_value([players_hand[-1]])} ")
-                sleep_print(f"Player's hand {players_hand}, Value: {players_hand_value}\n")
+def main() -> None:
+    sleep_print("===== Blackjack || Twenty-One =====")
+    sleep_print("The standard 52-card pack is used")
+    sleep_print("Object of the Game: Get as close to 21 as possible without going over")
+    sleep_print("Card Values: Ace is 1 or 11. Face cards are 10. Other cards are their pip value.")
 
-                if players_hand_value > 21:
-                    sleep_print(f"Making your hand over 21, {players_hand}, Hand Value: {players_hand_value}")
-                    sleep_print("YOU BUSTED :(\n\n")
-                    game_running = False
-
-            if user_input in ("2", "stay"):
-                sleep_print("PLAYER STAYS\n")
-                sleep_print("Revealing Dealers hand")    
-                sleep_print(f"Dealers Hand: {dealers_hand} , Hand Value: {dealers_hand_value}\n")
-                players_turn = False
-
-        # Dealer's Turn
-        dealers_turn = True
-        while dealers_turn and game_running:
-            # Check if dealer need to draw
-            if dealers_hand_value < 17:
-                dealers_hand.append(deck.pop())
-                dealers_hand_value = hand_value(dealers_hand)
-                sleep_print(f"Dealer draws a {dealers_hand[-1]}, Card Value: {hand_value([dealers_hand[-1]])}\n")
-                sleep_print(f"Dealer's hand is {dealers_hand}, Hand Value: {dealers_hand_value}\n")
-
-                # Check for bust
-                if dealers_hand_value > 21:
-                    sleep_print("DEALER BUSTED\n")
-                    game_running = False
-                    break
-            else:
-                sleep_print("DEALER STAYS\n")
-                dealers_turn = False
-
-        # Decide victor and announce
-        if game_running:
-            if dealers_hand_value >= players_hand_value:
-                sleep_print(f"Dealer's hand {dealers_hand}, Value: {dealers_hand_value} is >= player's hand {players_hand}, Value: {players_hand_value}\n")
-                sleep_print("\n----- DEALER WINS -----\n")
-            else:
-                sleep_print(f"Player's hand {players_hand}, Value: {players_hand_value} is greater than the dealer's hand {dealers_hand}, Value: {dealers_hand_value} and therefore wins\n")
-                sleep_print("\n***** YOU WIN!!! *****\n")
-            game_running = False
-
-    # Prompt for replay
-    replay = input("Do you want to play again? (yes/no): ").strip().lower()
-    if replay not in ("yes", "y"):
-        break
-    else:
+    while True:
+        play_blackjack()
+        play_again = get_user_choice("Do you want to play again? (yes/no): ", ["yes", "no", "y", "n"])
+        if play_again in ("no", "n"):
+            break
         sleep_print("Starting a new game...\n")
-        first_run = False
 
-sleep_print("Thanks for playing!")
+    sleep_print("Thanks for playing!")
+
+if __name__ == "__main__":
+    main()
