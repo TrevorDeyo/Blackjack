@@ -7,14 +7,14 @@ BLACKJACK = 21
 DEALER_STAND = 17
 
 # Card values
-VALUES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11}
+VALUES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '1': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11}
 
 def sleep_print(text: str) -> None:
     print(text)
     time.sleep(0.5)
 
 def hand_value(hand: List[str]) -> int:
-    total = sum(VALUES[card.split()[0]] for card in hand)
+    total = sum(VALUES[card[0]] for card in hand)
     aces = sum(card.startswith('A') for card in hand)
     while total > BLACKJACK and aces:
         total -= 10
@@ -51,7 +51,7 @@ def dealer_turn(deck: List[str], dealer_hand: List[str]) -> Tuple[List[str], boo
     while hand_value(dealer_hand) < DEALER_STAND:
         dealer_hand.append(deck.pop())
         sleep_print(f"Dealer draws a {dealer_hand[-1]}")
-        sleep_print(f"Dealer's hand: {dealer_hand}, Hand Value: {hand_value(dealer_hand)}")
+        sleep_print(f"Dealer's hand: {dealer_hand}, Hand Value: {hand_value(dealer_hand)}\n")
 
         if hand_value(dealer_hand) > BLACKJACK:
             sleep_print("DEALER BUSTED")
@@ -62,7 +62,7 @@ def determine_winner(player_hand: List[str], dealer_hand: List[str]) -> None:
     player_value = hand_value(player_hand)
     dealer_value = hand_value(dealer_hand)
 
-    sleep_print(f"Your hand: {player_hand}, Value: {player_value}")
+    sleep_print(f"\nYour hand: {player_hand}, Value: {player_value}")
     sleep_print(f"Dealer's hand: {dealer_hand}, Value: {dealer_value}")
 
     if dealer_value >= player_value:
@@ -85,7 +85,7 @@ def play_blackjack() -> None:
 
     if not player_busted:
         sleep_print("Revealing Dealer's hand")
-        sleep_print(f"Dealer's Hand: {dealer_hand}")
+        sleep_print(f"Dealer's Hand: {dealer_hand}, Value: {hand_value(dealer_hand)}")
         dealer_hand, dealer_busted = dealer_turn(deck, dealer_hand)
 
         if not dealer_busted:
@@ -99,8 +99,8 @@ def main() -> None:
 
     while True:
         play_blackjack()
-        play_again = get_user_choice("Do you want to play again? (yes/no): ", ["yes", "no", "y", "n"])
-        if play_again in ("no", "n"):
+        play_again = get_user_choice("Do you want to play again? (yes/no): ", ["yes", "no", "y", "n", "1", "2"])
+        if play_again in ("no", "n", "2"):
             break
         sleep_print("Starting a new game...\n")
 
