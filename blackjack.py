@@ -99,7 +99,7 @@ def main() -> None:
 
     while True:
         play_blackjack()
-        play_again = get_user_choice("Do you want to play again? (yes/no): ", ["yes", "no", "y", "n", "1", "2"])
+        play_again = get_user_choice("Do you want to play again? ( yes or no | y or n | 1 or 2 ): ", ["yes", "no", "y", "n", "1", "2"])
         if play_again in ("no", "n", "2"):
             break
         sleep_print("Starting a new game...\n")
